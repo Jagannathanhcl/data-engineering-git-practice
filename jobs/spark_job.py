@@ -1,19 +1,31 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+import yaml
 
 def main():
     spark = SparkSession.builder \
-        .appName("GitPracticeSparkJob") \
+        .appName("ConfigDrivenSparkJob") \
         .getOrCreate()
 
-    df = spark.read.csv("data/raw_data.csv", header=True, inferSchema=True)
+    # Read config file
+    with open("config/config.yaml", "r") as file:
+        config = yaml.safe_load(file)
 
-    df = df.filter(col("age") > 25)
+    input_path = config["input_path"]
+    output_path = config["output_path"]
+    min_age = config["min_age"]
+
+    # Read data
+    df = spark.read.csv(input_path, header=True, inferSchema=True)
+
+    # Transformations
+    df = df.filter(col("age") > min_age)
     df = df.withColumn("salary_in_lakhs", col("salary") / 100000)
 
-    df.write.mode("overwrite").csv("output/processed_data", header=True)
+    # Write output
+    df.write.mode("overwrite").csv(output_path, header=True)
 
-    print("Job completed")
+    print("✅ Config-driven job completed")
 
     spark.stop()
 
