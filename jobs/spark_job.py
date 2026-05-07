@@ -11,8 +11,9 @@ def main():
     with open("config/config.yaml", "r") as file:
         config = yaml.safe_load(file)
 
-    input_path = config["input_path"]
-    output_path = config["output_path"]
+       input_path = "gs://jagan_git-data-bucket/customer_table.csv"
+        output_path = "gs://jagan_git-data-bucket/output/processed_data"
+
     min_age = config["min_age"]
 
     # Read data
