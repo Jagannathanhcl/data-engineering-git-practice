@@ -18,6 +18,10 @@ def main():
     # Read data
     df = spark.read.csv(input_path, header=True, inferSchema=True)
 
+    # Data validation
+if df.filter(df["age"].isNull()).count() > 0:
+    raise Exception("Data validation failed: Null values found in age column")
+
     # Transformations
     df = df.filter(col("age") > min_age)
     df = df.withColumn("salary_in_lakhs", col("salary") / 100000)
