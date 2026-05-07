@@ -19,7 +19,7 @@ def main():
     df = spark.read.csv(input_path, header=True, inferSchema=True)
 
     # Data validation
-if df.filter(df["age"].isNull()).count() > 0:
+    if df.filter(df["age"].isNull()).count() > 0:
     raise Exception("Data validation failed: Null values found in age column")
 
     # Transformations
