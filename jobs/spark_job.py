@@ -16,7 +16,7 @@ def main():
     min_age = config["min_age"]
 
     # Read data
-    df = spark.read.csv(input_path111, header=True, inferSchema=True)
+    df = spark.read.csv(input_path, header=True, inferSchema=True)
 
     # Transformations
     df = df.filter(col("age") > min_age)
