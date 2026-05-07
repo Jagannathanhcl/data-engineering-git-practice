@@ -18,9 +18,8 @@ def main():
     # Read data
     df = spark.read.csv(input_path, header=True, inferSchema=True)
 
-    # Data validation
-    if df.filter(df["age"].isNull()).count() > 0:
-            raise Exception("Data validation failed: Null values found in age column")
+   # Data cleaning: remove null age rows
+    df = df.dropna(subset=["age"])
 
     # Transformations
     df = df.filter(col("age") > min_age)
