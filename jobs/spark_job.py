@@ -7,8 +7,8 @@ def main():
         .appName("ConfigDrivenSparkJob") \
         .getOrCreate()
 
-    input_path = "gs://jagan_git-data-bucket/customer_table.csv"
-    output_path = "gs://jagan_git-data-bucket/output/processed_data"
+    input_path = "gs://jagan_git/customer_table.csv"
+    output_path = "gs://jagan_git/output/processed_data"
 
     df = spark.read.csv(input_path, header=True, inferSchema=True)
 
