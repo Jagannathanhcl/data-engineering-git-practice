@@ -1,0 +1,3 @@
+input_path: data/raw_data.csv
+output_path: output/processed_data
+min_age: 25
