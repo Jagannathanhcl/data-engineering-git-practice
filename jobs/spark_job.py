@@ -20,7 +20,7 @@ def main():
 
     # Data validation
     if df.filter(df["age"].isNull()).count() > 0:
-    raise Exception("Data validation failed: Null values found in age column")
+            raise Exception("Data validation failed: Null values found in age column")
 
     # Transformations
     df = df.filter(col("age") > min_age)
