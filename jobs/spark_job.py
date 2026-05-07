@@ -7,31 +7,22 @@ def main():
         .appName("ConfigDrivenSparkJob") \
         .getOrCreate()
 
-    # Read config file
-    with open("config/config.yaml", "r") as file:
-        config = yaml.safe_load(file)
+    input_path = "gs://jagan_git-data-bucket/customer_table.csv"
+    output_path = "gs://jagan_git-data-bucket/output/processed_data"
 
-       input_path = "gs://jagan_git-data-bucket/customer_table.csv"
-        output_path = "gs://jagan_git-data-bucket/output/processed_data"
-
-    min_age = config["min_age"]
-
-    # Read data
     df = spark.read.csv(input_path, header=True, inferSchema=True)
 
-   # Data cleaning: remove null age rows
+    total_count = df.count()
+    bad_count = df.filter(df["age"].isNull()).count()
+
+    if bad_count > 0:
+        print("⚠️ DATA QUALITY ALERT")
+        print(f"Found {bad_count} bad records")
+
     df = df.dropna(subset=["age"])
 
-    # Transformations
-    df = df.filter(col("age") > min_age)
-    df = df.withColumn("salary_in_lakhs", col("salary") / 100000)
+    print(f"✅ Cleaned data. Before: {total_count}, After: {df.count()}")
 
-    # Write output
     df.write.mode("overwrite").csv(output_path, header=True)
 
-    print("✅ Config-driven job completed")
-
     spark.stop()
-
-if __name__ == "__main__":
-    main()
